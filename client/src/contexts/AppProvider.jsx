@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 
 const AppContext = createContext();
 
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.baseURL = '/';
 axios.defaults.withCredentials = true;
 
 const defaultExpenseCategories = [
@@ -29,6 +29,7 @@ function AppProvider({ children }) {
     const [yearData, setYearData] = useState([]);
     const [budgetUsage, setBudgetUsage] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [savings, setSavings] = useState(null);
 
     const [expenseCategory, setExpenseCategory] = useState(defaultExpenseCategories);
 
@@ -85,6 +86,7 @@ function AppProvider({ children }) {
             await axios.post('/api/transactions', transaction);
             await fetchMonthlySummary();
             await getTransactions();
+            await getSavings(); // Refresh savings data after adding transaction
             toast.success('Transaction added');
         } catch {
             toast.error('Add transaction failed');
@@ -101,9 +103,22 @@ function AppProvider({ children }) {
     };
 
 
+    const updateTransaction = async (id, updates) => {
+        try {
+            await axios.put(`/api/transactions/${id}`, updates);
+            await fetchMonthlySummary();
+            await getTransactions();
+            toast.success('Transaction updated');
+        } catch {
+            toast.error('Update transaction failed');
+        }
+    };
+
     const deleteTransaction = async (id) => {
         try {
             await axios.delete(`/api/transactions/${id}`);
+            await fetchMonthlySummary();
+            await getTransactions();
             toast.success('Transaction deleted');
         } catch {
             toast.error('Delete transaction failed');
@@ -186,6 +201,23 @@ function AppProvider({ children }) {
         }
     };
 
+    // ---------- Savings ----------
+    const getSavings = async () => {
+        try {
+            const { data } = await axios.get('/api/savings');
+            setSavings(data);
+        } catch (error) {
+            console.error('Error fetching savings:', error);
+            // Set default savings if fetch fails
+            setSavings({
+                totalSaved: 0,
+                roundUpAmount: 0,
+                monthlyGoal: 0,
+                lastUpdated: new Date()
+            });
+        }
+    };
+
     useEffect(() => {
         loadUser()
     }, []);
@@ -199,6 +231,7 @@ function AppProvider({ children }) {
                 await fetchSummary()
                 await getBudgetUsage()
                 await getTransactions()
+                await getSavings()
                 setLoading(false)
             } catch (error) {
                 //setLoading(false);
@@ -223,6 +256,7 @@ function AppProvider({ children }) {
                 statistic,
                 addTransaction,
                 getTransactions,
+                updateTransaction,
                 deleteTransaction,
                 addBudget,
                 budgets,
@@ -234,7 +268,9 @@ function AppProvider({ children }) {
                 getBudgetUsage,
                 transactions,
                 search,
-                setSearch
+                setSearch,
+                savings,
+                getSavings
             }}
         >
             {children}

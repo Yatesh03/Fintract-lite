@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  Menu, X, Home, History, BadgeDollarSign, Goal, UserCircle, SlidersVertical
+  Menu, X, Home, History, BadgeDollarSign, Goal, UserCircle, SlidersVertical, Bot, PiggyBank
 } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAppContext } from "../contexts/AppProvider";
@@ -31,6 +31,8 @@ export default function UserLayout() {
     { name: "Budgets", icon: <Goal size={20} />, href: "/budgets" },
     { name: "Set Budgets", icon: <SlidersVertical size={20} />, href: "/set-budgets" },
     { name: "Transactions", icon: <History size={20} />, href: "/transactions" },
+    { name: "Savings Wallet", icon: <PiggyBank size={20} />, href: "/savings" },
+    { name: "AI Advisor", icon: <Bot size={20} />, href: "/ai-advisor" },
   ];
 
   useEffect(() => {
@@ -63,12 +65,12 @@ export default function UserLayout() {
         ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <div className="flex items-center justify-between px-5 py-8">
-          <span
-            onClick={() => navigate("/")}
-            className="text-xl text-green-600 font-bold flex items-center gap-2 cursor-pointer"
-          >
-            <img src="./logo.png" alt="" className="size-8" /> CashFlowX
-          </span>
+            <span
+              onClick={() => navigate("/")}
+              className="text-xl text-green-600 font-bold flex items-center gap-2 cursor-pointer"
+            >
+              <img src="./logo.png" alt="" className="size-8" /> Fintract-lite
+            </span>
           <button
             ref={toggleRef}
             className="md:hidden"
@@ -107,19 +109,25 @@ export default function UserLayout() {
             <Menu size={24} />
           </button>
 
-          <div className="flex items-center justify-between md:w-full gap-4">
-            {/* Search */}
-            <div className="hidden md:flex items-center border pl-3 gap-2 bg-white border-gray-300 h-[46px] rounded-md w-full max-w-md">
-              <input
-                type="text"
-                placeholder="Search transactions..."
-                className="w-full h-full text-sm text-gray-600 outline-none"
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  navigate("/transactions");
-                }}
-              />
-            </div>
+          <div className={`flex items-center gap-4 ${
+            (location.pathname === '/' || location.pathname === '/transactions')
+              ? 'justify-between md:w-full'
+              : 'ml-auto'
+          }`}>
+            {/* Search - Only show on Dashboard and Transactions pages */}
+            {(location.pathname === '/' || location.pathname === '/transactions') && (
+              <div className="hidden md:flex items-center border pl-3 gap-2 bg-white border-gray-300 h-[46px] rounded-md w-full max-w-md">
+                <input
+                  type="text"
+                  placeholder="Search transactions..."
+                  className="w-full h-full text-sm text-gray-600 outline-none"
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    navigate("/transactions");
+                  }}
+                />
+              </div>
+            )}
 
             {/* User Dropdown */}
             <div className="relative" ref={userDropdownRef}>

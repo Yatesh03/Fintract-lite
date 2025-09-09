@@ -1,8 +1,51 @@
 import Transaction from '../models/Transaction.js';
+import Savings from '../models/Savings.js';
 
 export const addTransaction = async (req, res) => {
   try {
+    const { amount, type } = req.body;
+    
+    // Create the transaction
     const transaction = await Transaction.create({ ...req.body, user: req.user.id });
+    
+    // Apply round-up logic for expenses (any amount not ending in 0)
+    if (type === 'Expense' && amount % 10 !== 0) {
+      const roundUpAmount = Math.ceil(amount / 10) * 10;
+      const savingsAmount = roundUpAmount - amount;
+      
+      console.log(`Round-up logic: Amount ${amount} -> Round up to ${roundUpAmount}, Savings: ${savingsAmount}`);
+      
+      // Add to savings
+      let savings = await Savings.findOne({ user: req.user.id });
+      if (!savings) {
+        console.log('Creating new savings record for user:', req.user.id);
+        try {
+          savings = await Savings.create({ 
+            user: req.user.id,
+            amount: 0,
+            roundUpAmount: savingsAmount,
+            totalSaved: savingsAmount,
+            monthlyGoal: 0,
+            lastUpdated: new Date()
+          });
+          console.log('New savings record created with round-up:', savings);
+        } catch (createError) {
+          console.error('Error creating savings record:', createError);
+          throw createError;
+        }
+      } else {
+        savings.roundUpAmount += savingsAmount;
+        savings.totalSaved += savingsAmount;
+        savings.lastUpdated = new Date();
+        await savings.save();
+        console.log('Updated existing savings record:', savings);
+      }
+      
+      // Add round-up info to transaction response
+      transaction.roundUpAmount = savingsAmount;
+      transaction.actualAmount = roundUpAmount;
+    }
+    
     res.status(201).json(transaction);
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
@@ -13,6 +56,46 @@ export const getTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find({ user: req.user.id });
     res.json(transactions);
+  } catch (err) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export const updateTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { amount, type, category, description } = req.body;
+    
+    // Find the transaction
+    const transaction = await Transaction.findOne({ _id: id, user: req.user.id });
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+    
+    // Update the transaction
+    const updatedTransaction = await Transaction.findByIdAndUpdate(
+      id,
+      { amount, type, category, description },
+      { new: true }
+    );
+    
+    res.json(updatedTransaction);
+  } catch (err) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Find and delete the transaction
+    const transaction = await Transaction.findOneAndDelete({ _id: id, user: req.user.id });
+    if (!transaction) {
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+    
+    res.json({ message: 'Transaction deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }
