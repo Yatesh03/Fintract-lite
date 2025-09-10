@@ -51,7 +51,7 @@ function Login() {
         <div className='border-b border-gray-200 px-2 py-6 mb-6'>
           <div className='flex justify-center gap-2 items-center text-3xl font-black text-green-500'>
             <img src="./logo.png" className="size-12" alt="Logo" />
-            <h1>CashFlowX</h1>
+            <h1>Fintract-Lite</h1>
           </div>
           <p className='text-sm font-semibold mt-2 text-center'>Track Your Cash Flow</p>
         </div>

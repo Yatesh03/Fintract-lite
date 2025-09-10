@@ -5,6 +5,7 @@ import {
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useAppContext } from "../contexts/AppProvider";
 import SkeletonLoader from "../components/SkeletonLoader";
+import ProfileMenu from "../components/ProfileMenu";
 
 export default function UserLayout() {
   const { setSearch, logout, navigate, user, loading } = useAppContext();
@@ -12,6 +13,7 @@ export default function UserLayout() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const sidebarRef = useRef(null);
   const toggleRef = useRef(null);
@@ -137,13 +139,24 @@ export default function UserLayout() {
 
               {showUserDropdown && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 p-4 z-50">
-                  <p className="text-sm font-semibold text-gray-800 mb-2">{user.email}</p>
-                  <button
-                    className="text-red-500 cursor-pointer bg-red-50 border w-full px-3 py-2 rounded border-red-500 text-sm font-medium"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
+                  <p className="text-sm font-semibold text-gray-800 mb-2">{user.name || user.email}</p>
+                  <div className="space-y-2">
+                    <button
+                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                      onClick={() => {
+                        setShowProfileMenu(true);
+                        setShowUserDropdown(false);
+                      }}
+                    >
+                      View Profile
+                    </button>
+                    <button
+                      className="text-red-500 cursor-pointer bg-red-50 border w-full px-3 py-2 rounded border-red-500 text-sm font-medium"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -155,6 +168,12 @@ export default function UserLayout() {
           {loading ? <SkeletonLoader /> : <Outlet />}
         </main>
       </div>
+
+      {/* Profile Menu */}
+      <ProfileMenu 
+        isOpen={showProfileMenu} 
+        onClose={() => setShowProfileMenu(false)} 
+      />
     </div>
   );
 }

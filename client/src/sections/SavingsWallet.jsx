@@ -222,7 +222,7 @@ function SavingsWallet() {
             ></div>
           </div>
           <div className="flex justify-between text-sm text-gray-600">
-            <span>Rs. 0</span>
+            <span>Rs. {savings.totalSaved?.toFixed(2) || '0.00'}</span>
             <span className="font-medium">
               {goalProgress >= 100 ? 'Goal Achieved! 🎉' : `${goalProgress.toFixed(1)}% Complete`}
             </span>
