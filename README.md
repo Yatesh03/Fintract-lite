@@ -301,7 +301,7 @@ This project is licensed under the ISC License. See the [LICENSE](LICENSE) file 
 
 ## 👥 Authors
 
-- **Your Name** - Initial work - [YourGitHub](https://github.com/yourusername)
+- **Yatesh Chauhan** - Initial work - [Yatesh03](https://github.com/Yatesh03)
 
 ---
 
