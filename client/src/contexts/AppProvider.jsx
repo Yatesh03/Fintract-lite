@@ -270,7 +270,8 @@ function AppProvider({ children }) {
                 search,
                 setSearch,
                 savings,
-                getSavings
+                getSavings,
+                loadUser
             }}
         >
             {children}

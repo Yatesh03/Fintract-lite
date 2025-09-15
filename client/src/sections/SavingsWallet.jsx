@@ -268,6 +268,22 @@ function SavingsWallet() {
         </div>
       </div>
 
+      {/* Round-up History */}
+      {Array.isArray(savings?.history) && savings.history.length > 0 && (
+        <div className="bg-white rounded-xl p-6 border border-gray-200 mt-8">
+          <h3 className="text-lg font-semibold mb-4">Round-up History</h3>
+          <div className="space-y-2">
+            {savings.history.slice().reverse().map((h, idx) => (
+              <div key={idx} className="flex items-center justify-between text-sm border-b last:border-b-0 py-2">
+                <span className="text-gray-600">Txn: {h.txnId || '—'}</span>
+                <span className="font-medium">Rs. {Number(h.roundUp || 0).toFixed(2)}</span>
+                <span className="text-gray-500">{new Date(h.createdAt).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Set Goal Modal */}
       {showGoalModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
