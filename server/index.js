@@ -13,8 +13,10 @@ import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (non-blocking)
+connectDB().catch(err => {
+  console.error('Failed to connect to MongoDB:', err.message);
+});
 
 const app = express();
 app.use(cookieParser());

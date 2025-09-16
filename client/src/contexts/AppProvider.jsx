@@ -69,6 +69,30 @@ function AppProvider({ children }) {
         }
     };
 
+    const forgotPassword = async (email) => {
+        try {
+            const { data } = await axios.post('/api/auth/forgot-password', { email });
+            toast.success(data.message);
+            return { success: true };
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to send reset email');
+            return { success: false };
+        }
+    };
+
+    const resetPassword = async (token, newPassword) => {
+        try {
+            const { data } = await axios.post('/api/auth/reset-password', { token, newPassword });
+            setUser(data.user);
+            toast.success(data.message);
+            navigate('/');
+            return { success: true };
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Failed to reset password');
+            return { success: false };
+        }
+    };
+
     const loadUser = async () => {
         try {
             const res = await axios.get('/api/auth/me');
@@ -253,6 +277,8 @@ function AppProvider({ children }) {
                 login,
                 loading,
                 logout,
+                forgotPassword,
+                resetPassword,
                 statistic,
                 addTransaction,
                 getTransactions,

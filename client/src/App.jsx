@@ -1,6 +1,7 @@
 import React from 'react'
 import UserLayout from './pages/UserLayout'
 import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
 import Dashboard from './sections/Dashboard'
 import AddTransaction from './sections/AddTransaction'
 import Trasactions from './sections/Transactions'
@@ -18,8 +19,9 @@ function App() {
   return (
     <>
       <Routes>
-        {/** Login route (public) */}
+        {/** Public routes */}
         <Route path='login' element={<Login />} />
+        <Route path='reset-password' element={<ResetPassword />} />
 
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>

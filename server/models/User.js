@@ -13,6 +13,8 @@ const UserSchema = new mongoose.Schema({
   bio: { type: String, default: '' },
   balance: { type: Number, default: 0 },
   upiId: { type: String, default: '' },
+  resetPasswordToken: { type: String },
+  resetPasswordExpire: { type: Date },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
