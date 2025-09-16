@@ -8,6 +8,8 @@ import Budgets from './sections/Budgets'
 import SetBudgets from './sections/SetBudgets'
 import AIAdvisor from './sections/AIAdvisor'
 import SavingsWallet from './sections/SavingsWallet'
+import ScanPay from './sections/ScanPay'
+import RequestPay from './sections/RequestPay'
 import ProtectedRoute from './components/ProtectedRoute';
 import { Route, Routes } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
@@ -28,6 +30,8 @@ function App() {
             <Route path='/set-budgets' element={<SetBudgets />} />
             <Route path='/transactions' element={<Trasactions />} />
             <Route path='/savings' element={<SavingsWallet />} />
+            <Route path='/scan-pay' element={<ScanPay />} />
+            <Route path='/request-pay' element={<RequestPay />} />
             <Route path='/ai-advisor' element={<AIAdvisor />} />
           </Route>
         </Route>

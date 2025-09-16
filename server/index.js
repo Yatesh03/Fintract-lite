@@ -6,6 +6,8 @@ import transactionRoutes from './routes/transactionRoutes.js';
 import budgetRoutes from './routes/budgetRoutes.js';
 import savingsRoutes from './routes/savingsRoutes.js';
 import auth from './middleware/authMiddleware.js';
+import paymentRoutes from './routes/paymentRoutes.js';
+import walletRoutes from './routes/walletRoutes.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
@@ -35,6 +37,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/transactions', auth, transactionRoutes);
 app.use('/api/budgets', auth, budgetRoutes);
 app.use('/api/savings', auth, savingsRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/wallet', walletRoutes);
 
 // 🔹 Test route to confirm API is working
 app.get('/test', (req, res) => {

@@ -34,6 +34,8 @@ export default function UserLayout() {
     { name: "Set Budgets", icon: <SlidersVertical size={20} />, href: "/set-budgets" },
     { name: "Transactions", icon: <History size={20} />, href: "/transactions" },
     { name: "Savings Wallet", icon: <PiggyBank size={20} />, href: "/savings" },
+    { name: "Scan & Pay", icon: <BadgeDollarSign size={20} />, href: "/scan-pay" },
+    { name: "Request / Receive", icon: <BadgeDollarSign size={20} />, href: "/request-pay" },
     { name: "AI Advisor", icon: <Bot size={20} />, href: "/ai-advisor" },
   ];
 

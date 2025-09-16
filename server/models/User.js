@@ -11,6 +11,8 @@ const UserSchema = new mongoose.Schema({
   phone: { type: String, default: '' },
   address: { type: String, default: '' },
   bio: { type: String, default: '' },
+  balance: { type: Number, default: 0 },
+  upiId: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });

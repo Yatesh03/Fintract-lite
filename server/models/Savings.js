@@ -5,6 +5,11 @@ const SavingsSchema = new mongoose.Schema({
   amount: { type: Number, required: true, default: 0 },
   roundUpAmount: { type: Number, required: true, default: 0 }, // Amount saved from round-ups
   totalSaved: { type: Number, required: true, default: 0 }, // Total savings
+  history: [{
+    txnId: { type: String },
+    roundUp: { type: Number, default: 0 },
+    createdAt: { type: Date, default: Date.now }
+  }],
   lastUpdated: { type: Date, default: Date.now },
   monthlyGoal: { type: Number, default: 0 }, // Optional monthly savings goal
 });

@@ -13,14 +13,14 @@ export const register = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, password, balance: 0 });
     res.cookie('token', generateToken(user._id), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    res.status(201).json({ _id: user._id, name: user.name, email: user.email });
+    res.status(201).json({ _id: user._id, name: user.name, email: user.email, balance: user.balance, upiId: user.upiId });
   } catch (err) {
     res.status(500).json({ message: 'Server Error' });
   }
@@ -37,7 +37,7 @@ export const login = async (req, res) => {
         sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
-      res.json({ _id: user._id, name: user.name, email: user.email });
+      res.json({ _id: user._id, name: user.name, email: user.email, balance: user.balance, upiId: user.upiId });
     } else {
       res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -69,6 +69,8 @@ export const getCurrentUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      balance: user.balance,
+      upiId: user.upiId,
       age: user.age,
       occupation: user.occupation,
       profilePicture: user.profilePicture,
